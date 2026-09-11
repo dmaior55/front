@@ -109,8 +109,19 @@ export async function login(email, senha) {
 //     Sua mensagem tem que aparecer em vermelho na tela.
 //
 export async function cadastrar(nome, email, senha) {
-  // ↓↓↓ APAGUE ESTA LINHA E ESCREVA SEU CÓDIGO ↓↓↓
-  throw new Error("🚧 TAREFA 1 ainda não foi implementada (src/services/api.js)");
+  const resposta = await fetch(`${API_URL}/api/usuarios/cadastrar`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome, email, senha }),
+  });
+
+  const dados = await resposta.json();
+
+  if (!resposta.ok) {
+    throw new Error(dados.mensagem || "Não foi possível criar a conta.");
+  }
+
+  return dados; // { sucesso, mensagem, token, usuario }
 }
 
 // ╔═════════════════════════════════════════════════════════════════════╗
@@ -145,10 +156,18 @@ export async function cadastrar(nome, email, senha) {
 //  ✅ Deu certo quando: os cards da turma aparecem no mural.
 //  🧪 Teste o erro: apague uma letra do token antes de mandar e veja o 401.
 //
+
 export async function listarUsuarios(token) {
-  // ↓↓↓ APAGUE ESTA LINHA E ESCREVA SEU CÓDIGO ↓↓↓
-  throw new Error("🚧 TAREFA 2 ainda não foi implementada (src/services/api.js)");
+const resposta = await fetch(`${API_URL}/api/usuarios`, {
+headers: { Authorization: `Bearer ${token}` },
+});
+const dados = await resposta.json();
+if (!resposta.ok) {
+throw new Error(dados.mensagem || "Não foi possível carregar a lista.");
 }
+return dados.usuarios;
+}
+
 
 // ╔═════════════════════════════════════════════════════════════════════╗
 // ║                                                                     ║
@@ -182,8 +201,19 @@ export async function listarUsuarios(token) {
 //     no formulário? (Resposta: o componente pai recarregou a lista.)
 //
 export async function editarPerfil(token, nome, email) {
-  // ↓↓↓ APAGUE ESTA LINHA E ESCREVA SEU CÓDIGO ↓↓↓
-  throw new Error("🚧 TAREFA 3 ainda não foi implementada (src/services/api.js)");
+const resposta = await fetch(`${API_URL}/api/usuarios/editar`, {
+method: "PUT",
+headers: {
+"Content-Type": "application/json",
+Authorization: `Bearer ${token}`,
+},
+body: JSON.stringify({ nome, email }),
+});
+const dados = await resposta.json();
+if (!resposta.ok) {
+throw new Error(dados.mensagem || "Não foi possível salvar.");
+}
+return dados;
 }
 
 // ╔═════════════════════════════════════════════════════════════════════╗
@@ -214,6 +244,10 @@ export async function editarPerfil(token, nome, email) {
 //     social, quase sempre é isso que acontece.
 //
 export async function desativarConta(token) {
-  // ↓↓↓ APAGUE ESTA LINHA E ESCREVA SEU CÓDIGO ↓↓↓
-  throw new Error("🚧 TAREFA 4 ainda não foi implementada (src/services/api.js)");
+const resposta = await fetch(`${API_URL}/api/usuarios/desativar`, {
+method: "DELETE",
+headers: { Authorization: `Bearer ${token}` },
+});
+const dados = await resposta.json();
+return dados;
 }
